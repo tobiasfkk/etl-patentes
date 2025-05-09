@@ -26,7 +26,7 @@ services:
       POSTGRES_DB: patents_db
     volumes:
       - .:/app
-    command: ["python", "src/app.py"]
+    command: ["/wait-for-db.sh", "db", "5432", "--", "python", "src/app.py"]
 
 volumes:
   postgres_data:
