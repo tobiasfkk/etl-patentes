@@ -7,10 +7,9 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: patents_db
     ports:
-      - "5432:5432"
+      - "5433:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./src/database:/docker-entrypoint-initdb.d
 
   app:
     build:
@@ -26,7 +25,7 @@ services:
       POSTGRES_DB: patents_db
     volumes:
       - .:/app
-    command: ["/wait-for-db.sh", "db", "5432", "--", "python", "src/app.py"]
+    command: ["python", "src/app.py"]
 
 volumes:
   postgres_data:

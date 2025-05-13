@@ -1,37 +1,35 @@
-CREATE TABLE dim_countries (
+CREATE TABLE IF NOT EXISTS dim_countries (
     id SERIAL PRIMARY KEY,
     country_code TEXT NOT NULL, -- Código do país (ex: "US")
     country_name TEXT NOT NULL -- Nome do país (ex: "United States")
 );
 
-CREATE TABLE dim_business_entity_status (
+CREATE TABLE IF NOT EXISTS dim_business_entity_status (
     id SERIAL PRIMARY KEY,
     status_name TEXT NOT NULL -- Nome do status (ex: "Regular Undiscounted", "Small")
 );
 
-CREATE TABLE dim_inventors (
+CREATE TABLE IF NOT EXISTS dim_inventors (
     id SERIAL PRIMARY KEY,
     inventor_name TEXT NOT NULL
 );
 
-CREATE TABLE dim_applicants (
+CREATE TABLE IF NOT EXISTS dim_applicants (
     id SERIAL PRIMARY KEY,
     applicant_name TEXT NOT NULL
 );
 
-
-CREATE TABLE dim_cpc_classification (
+CREATE TABLE IF NOT EXISTS dim_cpc_classification (
     id SERIAL PRIMARY KEY,
     classification_code TEXT NOT NULL
 );
 
-CREATE TABLE dim_examiners (
+CREATE TABLE IF NOT EXISTS dim_examiners (
     id SERIAL PRIMARY KEY,
     examiner_name TEXT NOT NULL
 );
 
-
-CREATE TABLE dim_addresses (
+CREATE TABLE IF NOT EXISTS dim_addresses (
     id SERIAL PRIMARY KEY,
     city_name TEXT,
     geographic_region_name TEXT,
@@ -44,7 +42,7 @@ CREATE TABLE dim_addresses (
     FOREIGN KEY (country_id) REFERENCES dim_countries (id)
 );
 
-CREATE TABLE fact_patents (
+CREATE TABLE IF NOT EXISTS fact_patents (
     id SERIAL PRIMARY KEY,
     application_number TEXT NOT NULL,
     filing_date DATE NOT NULL,
