@@ -1,62 +1,54 @@
+-- Tabela de Dimensão: Autores
+CREATE TABLE IF NOT EXISTS dim_authors (
+    id SERIAL PRIMARY KEY,
+    author_name TEXT NOT NULL UNIQUE
+);
+
+-- Tabela de Dimensão: Países
 CREATE TABLE IF NOT EXISTS dim_countries (
     id SERIAL PRIMARY KEY,
-    country_code TEXT NOT NULL, -- Código do país (ex: "US")
-    country_name TEXT NOT NULL -- Nome do país (ex: "United States")
+    country_name TEXT NOT NULL UNIQUE
 );
 
-CREATE TABLE IF NOT EXISTS dim_business_entity_status (
+-- Tabela de Dimensão: Palavras
+CREATE TABLE IF NOT EXISTS dim_words (
     id SERIAL PRIMARY KEY,
-    status_name TEXT NOT NULL -- Nome do status (ex: "Regular Undiscounted", "Small")
+    word TEXT NOT NULL UNIQUE
 );
 
-CREATE TABLE IF NOT EXISTS dim_inventors (
+-- Tabela de Dimensão: Tempo
+CREATE TABLE IF NOT EXISTS dim_date (
     id SERIAL PRIMARY KEY,
-    inventor_name TEXT NOT NULL
+    day INTEGER NOT NULL,
+    month INTEGER NOT NULL,
+    year INTEGER NOT NULL
 );
 
-CREATE TABLE IF NOT EXISTS dim_applicants (
+-- Tabela de Dimensão: Categorias
+CREATE TABLE IF NOT EXISTS dim_categories (
     id SERIAL PRIMARY KEY,
-    applicant_name TEXT NOT NULL
+    category_name TEXT NOT NULL UNIQUE
 );
 
-CREATE TABLE IF NOT EXISTS dim_cpc_classification (
+-- Tabela de Dimensão: Patentes
+CREATE TABLE IF NOT EXISTS dim_patents (
     id SERIAL PRIMARY KEY,
-    classification_code TEXT NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS dim_examiners (
-    id SERIAL PRIMARY KEY,
-    examiner_name TEXT NOT NULL
-);
-
-CREATE TABLE IF NOT EXISTS dim_addresses (
-    id SERIAL PRIMARY KEY,
-    city_name TEXT,
-    geographic_region_name TEXT,
-    geographic_region_code TEXT,
-    postal_code TEXT,
-    name_line_one TEXT,
-    name_line_two TEXT,
-    address_line_one TEXT,
-    country_id INTEGER, -- FK para dim_countries
-    FOREIGN KEY (country_id) REFERENCES dim_countries (id)
-);
-
-CREATE TABLE IF NOT EXISTS fact_patents (
-    id SERIAL PRIMARY KEY,
-    application_number TEXT NOT NULL,
-    filing_date DATE NOT NULL,
-    earliest_publication_date DATE,
     invention_title TEXT NOT NULL,
-    application_status TEXT,
-    customer_number INTEGER,
-    group_art_unit TEXT,
-    docket_number TEXT,
-    inventor_id INTEGER,
-    applicant_id INTEGER,
-    examiner_id INTEGER,
-    business_entity_status_id INTEGER,
-    cpc_classification_id INTEGER,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    abstract_text TEXT NOT NULL
+);
+
+-- Tabela de Fato: Palavras em Patentes
+CREATE TABLE IF NOT EXISTS fact_patents (
+    category_id INTEGER NOT NULL,
+    patent_id INTEGER NOT NULL,
+    word_id INTEGER NOT NULL,
+    word_count INTEGER NOT NULL,
+    date_id INTEGER NOT NULL,
+    country_id INTEGER NOT NULL,
+    author_id INTEGER NOT NULL,
+    FOREIGN KEY (patent_id) REFERENCES dim_patents (id),
+    FOREIGN KEY (word_id) REFERENCES dim_words (id),
+    FOREIGN KEY (country_id) REFERENCES dim_countries (id),
+    FOREIGN KEY (author_id) REFERENCES dim_authors (id),
+    FOREIGN KEY (date_id) REFERENCES dim_date (id)
 );

@@ -13,7 +13,7 @@ def get_db_connection():
                 user=os.getenv("POSTGRES_USER", "postgres"),
                 password=os.getenv("POSTGRES_PASSWORD", "postgres"),
                 host=os.getenv("DB_HOST", "localhost"),
-                port=os.getenv("DB_PORT", "5433"),
+                port=os.getenv("DB_PORT", "5432"),
                 cursor_factory=RealDictCursor
             )
         except psycopg2.OperationalError as e:

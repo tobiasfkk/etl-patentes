@@ -1,5 +1,5 @@
 import os
-from etl.extract import extract_data
+from etl.extract import extract_data_from_xml
 from etl.transform import transform_data
 from etl.load import load_data
 from src.utils.db_connection import get_db_connection
@@ -8,13 +8,13 @@ def main():
     try:
         print("Starting ETL process...")
         create_tables()
-        file_path = "data/dados.json"
+        file_path = "data/dados.xml"
 
         if not os.path.exists(file_path):
             raise FileNotFoundError(f"Data file not found: {file_path}")
 
         print("Extracting data...")
-        raw_data = extract_data(file_path)
+        raw_data = extract_data_from_xml(file_path)
         print(f"Extracted {len(raw_data)} records.")
 
         print("Transforming data...")
