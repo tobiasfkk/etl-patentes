@@ -1,12 +1,12 @@
 # Projeto de ETL para Dados de Patentes
 
-Este projeto realiza a extração, transformação e carga (ETL) de dados de patentes a partir de um arquivo JSON para um banco de dados PostgreSQL utilizando Docker.
+Este projeto realiza a extração, transformação e carga (ETL) de dados de patentes a partir de um arquivo XML para um banco de dados PostgreSQL utilizando Docker.
 
 ## Estrutura do Projeto
 
-- **`data/dados.json`**: Arquivo JSON com os dados de patentes.
+- **`data/dados.xml`**: Arquivo XML com os dados de patentes.
 - **`src/etl/`**: Scripts para as etapas de ETL:
-  - `extract.py`: Extrai os dados do arquivo JSON.
+  - `extract.py`: Extrai os dados do arquivo XML.
   - `transform.py`: Transforma os dados para o formato do banco de dados.
   - `load.py`: Carrega os dados no banco de dados.
 - **`src/database/`**: Scripts SQL para criar as tabelas no banco de dados.
@@ -42,17 +42,16 @@ Este projeto realiza a extração, transformação e carga (ETL) de dados de pat
 O banco de dados segue uma modelagem multidimensional com:
 - **Tabela de Fato**: `fact_patents`
 - **Tabelas de Dimensão**:
-  - `dim_inventors`
-  - `dim_applicants`
-  - `dim_cpc_classification`
-  - `dim_examiners`
-  - `dim_addresses`
-  - `dim_business_entity_status`
+  - `dim_authors`
   - `dim_countries`
+  - `dim_words`
+  - `dim_date`
+  - `dim_categories`
+  - `dim_patents`
 
 ## Observações
 
-- Certifique-se de que o arquivo [dados.json](http://_vscodecontentref_/1) está no diretório [data](http://_vscodecontentref_/2).
+- Certifique-se de que o arquivo `dados.xml` está no diretório `data`.
 - O ETL será executado automaticamente ao iniciar o contêiner Python.
 
 ## Contato
