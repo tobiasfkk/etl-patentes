@@ -1,0 +1,14 @@
+# Ignorar arquivos do macOS
+.DS_Store
+
+# Ignorar arquivos de ambiente virtual
+venv/
+*.pyc
+__pycache__/
+
+# Ignorar arquivos de dados
+data/dados.xml
+
+# Ignorar configurações de IDE
+.idea/
+*.iml
