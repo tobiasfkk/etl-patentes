@@ -1,4 +1,5 @@
 import xml.etree.ElementTree as ET
+import os
 
 def extract_data_from_xml(file_path):
     try:
@@ -18,4 +19,4 @@ def extract_data_from_xml(file_path):
             patents.append(data)
         return patents
     except ET.ParseError as e:
-        raise Exception(f"Error parsing XML file: {e}")
+        raise Exception(f"Error parsing XML file '{os.path.basename(file_path)}': {e}")
