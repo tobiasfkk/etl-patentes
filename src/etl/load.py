@@ -16,10 +16,11 @@ def load_data(transformed_data):
     cursor = connection.cursor()
 
     for data in transformed_data:
-        # Inserir autor, país e categoria
+        # Inserir autor, país, categoria e data
         author_id = insert_and_get_id(cursor, "dim_authors", {"author_name": data["fact"]["author_name"]}, "author_name")
         country_id = insert_and_get_id(cursor, "dim_countries", {"country_name": data["fact"]["country"]}, "country_name")
         category_id = insert_and_get_id(cursor, "dim_categories", {"category_name": data["fact"]["category"]}, "category_name")
+        date_id = insert_and_get_id(cursor, "dim_date", data["date"], "year")  # Verifica ano como campo único
 
         # Inserir na tabela de patentes
         patent_data = {
@@ -36,7 +37,7 @@ def load_data(transformed_data):
                 "patent_id": patent_id,
                 "word_id": word_id,
                 "word_count": count,
-                "date_id": None,  # Ajustar para inserir a data corretamente
+                "date_id": date_id,
                 "country_id": country_id,
                 "author_id": author_id,
             }
