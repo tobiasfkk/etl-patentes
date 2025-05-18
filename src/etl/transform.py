@@ -26,7 +26,8 @@ def transform_data(patent):
             "author_name": author_name,
             "date": {"day": day, "month": month, "year": year},
             "abstract": patent['abstract'],
-            "abstract_words": words
+            "abstract_words": words,
+            "description": patent['description']
         }
     except Exception as e:
         raise Exception(f"Error transforming data: {e}")

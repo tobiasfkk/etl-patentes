@@ -50,10 +50,14 @@ def load_data(transformed_data):
             if res:
                 patent_id = res['id']
             else:
-                cursor.execute("INSERT INTO dim_patents (invention_title, abstract_text) VALUES (%s, %s);", (data['title'], data['abstract']))
+                cursor.execute(
+                    "INSERT INTO dim_patents (invention_title, abstract_text, description_text) VALUES (%s, %s, %s);",
+                    (data['title'], data['abstract'], data['description'])
+                )
                 cursor.execute("SELECT id FROM dim_patents WHERE invention_title = %s;", (data['title'],))
                 patent_id = cursor.fetchone()['id']
             print(f"Patent ID: {patent_id}")
+            # print(f"Description: {data['description']}")
 
             # # Palavras
             # word_ids = []
