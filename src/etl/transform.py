@@ -1,5 +1,6 @@
 # transform.py
 from datetime import datetime
+import re
 
 def transform_data(patent):
     try:
@@ -15,7 +16,8 @@ def transform_data(patent):
             day, month, year = None, None, None
 
         # Dividir resumo em palavras únicas
-        words = set(patent['abstract'].split())
+        # words = set(patent['abstract'].split())
+        words = re.findall(r'\b\w+\b', patent['abstract'].lower())
 
         # Retornar dados transformados
         return {

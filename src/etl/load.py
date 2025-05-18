@@ -1,4 +1,5 @@
 from src.utils.db_connection import get_db_connection
+from collections import Counter
 
 def load_data(transformed_data):
     try:
@@ -54,9 +55,34 @@ def load_data(transformed_data):
                 patent_id = cursor.fetchone()['id']
             print(f"Patent ID: {patent_id}")
 
-            # Palavras
-            word_ids = []
-            for word in data['abstract_words']:
+            # # Palavras
+            # word_ids = []
+            # for word in data['abstract_words']:
+            #     cursor.execute("SELECT id FROM dim_words WHERE word = %s;", (word,))
+            #     res = cursor.fetchone()
+            #     if res:
+            #         word_id = res['id']
+            #     else:
+            #         cursor.execute("INSERT INTO dim_words (word) VALUES (%s);", (word,))
+            #         cursor.execute("SELECT id FROM dim_words WHERE word = %s;", (word,))
+            #         word_id = cursor.fetchone()['id']
+            #     word_ids.append(word_id)
+            # print(f"Word IDs count: {len(word_ids)}")
+            #
+            # # Fato
+            # for word_id in word_ids:
+            #     cursor.execute("""
+            #         INSERT INTO fact_patents (
+            #             patent_id, word_id, word_count, date_id, country_id, author_id
+            #         ) VALUES (%s, %s, %s, %s, %s, %s)
+            #         ON CONFLICT DO NOTHING;
+            #     """, (patent_id, word_id, count, date_id, country_id, author_id))
+
+            # Contar quantas vezes cada palavra aparece no abstract
+            word_counts = Counter(data['abstract_words'])
+
+            word_ids = {}  # Mapeia a palavra para seu ID
+            for word, count in word_counts.items():
                 cursor.execute("SELECT id FROM dim_words WHERE word = %s;", (word,))
                 res = cursor.fetchone()
                 if res:
@@ -65,17 +91,17 @@ def load_data(transformed_data):
                     cursor.execute("INSERT INTO dim_words (word) VALUES (%s);", (word,))
                     cursor.execute("SELECT id FROM dim_words WHERE word = %s;", (word,))
                     word_id = cursor.fetchone()['id']
-                word_ids.append(word_id)
-            print(f"Word IDs count: {len(word_ids)}")
+                word_ids[word] = (word_id, count)
+            print(f"Unique words in abstract: {len(word_ids)}")
 
             # Fato
-            for word_id in word_ids:
+            for word, (word_id, count) in word_ids.items():
                 cursor.execute("""
                     INSERT INTO fact_patents (
                         patent_id, word_id, word_count, date_id, country_id, author_id
                     ) VALUES (%s, %s, %s, %s, %s, %s)
                     ON CONFLICT DO NOTHING;
-                """, (patent_id, word_id, 1, date_id, country_id, author_id))
+                """, (patent_id, word_id, count, date_id, country_id, author_id))
 
         connection.commit()
         cursor.close()
