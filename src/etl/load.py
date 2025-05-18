@@ -73,7 +73,7 @@ def load_data(transformed_data):
                 cursor.execute("""
                     INSERT INTO fact_patents (
                         patent_id, word_id, word_count, date_id, country_id, author_id
-                    ) VALUES (%s, %s, %s, %s, %s, %s, %s)
+                    ) VALUES (%s, %s, %s, %s, %s, %s)
                     ON CONFLICT DO NOTHING;
                 """, (patent_id, word_id, 1, date_id, country_id, author_id))
 
