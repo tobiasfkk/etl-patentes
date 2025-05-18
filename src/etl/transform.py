@@ -1,28 +1,30 @@
-from collections import Counter
-import re
+# transform.py
+from datetime import datetime
 
 def transform_data(patent):
-    # Processar palavras do abstract
-    abstract = patent["abstract"]
-    words = re.findall(r"\b\w+\b", abstract.lower())  # Extrair palavras
-    word_counts = Counter(words)  # Contar ocorrências
+    try:
+        # Transformar nome do autor
+        author_name = f"{patent['first_name']} {patent['last_name']}".strip()
 
-    # Processar data de publicação
-    publication_date = patent["publication_date"]
-    if publication_date:
-        year, month, day = int(publication_date[:4]), int(publication_date[4:6]), int(publication_date[6:8])
-    else:
-        year, month, day = None, None, None
+        # Transformar data de publicação
+        publication_date = patent['publication_date']
+        if publication_date:
+            date_obj = datetime.strptime(publication_date, "%Y%m%d")
+            day, month, year = date_obj.day, date_obj.month, date_obj.year
+        else:
+            day, month, year = None, None, None
 
-    # Dados transformados
-    return {
-        "fact": {
-            "author_name": patent["author"],
-            "invention_title": patent["title"],
-            "publication_date": publication_date,
-            "country": patent["country"],
-            "category": patent["category"],
-        },
-        "words": word_counts,
-        "date": {"year": year, "month": month, "day": day}
-    }
+        # Dividir resumo em palavras únicas
+        words = set(patent['abstract'].split())
+
+        # Retornar dados transformados
+        return {
+            "title": patent['title'],
+            "country": patent['country'],
+            "author_name": author_name,
+            "date": {"day": day, "month": month, "year": year},
+            "abstract": patent['abstract'],
+            "abstract_words": words
+        }
+    except Exception as e:
+        raise Exception(f"Error transforming data: {e}")

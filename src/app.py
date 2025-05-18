@@ -1,4 +1,6 @@
 import os
+
+from data.fix import fix_xml
 from etl.extract import extract_data_from_xml
 from etl.transform import transform_data
 from etl.load import load_data
@@ -12,6 +14,10 @@ def main():
 
         if not os.path.exists(file_path):
             raise FileNotFoundError(f"Data file not found: {file_path}")
+
+        print("Tratando arquivo xml...")
+        fix_xml('data/dados.xml', 'data/dados_corrigido.xml')
+        file_path = "data/dados_corrigido.xml"
 
         print("Extracting data...")
         raw_data = extract_data_from_xml(file_path)

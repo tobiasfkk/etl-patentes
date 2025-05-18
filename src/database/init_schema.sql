@@ -21,25 +21,19 @@ CREATE TABLE IF NOT EXISTS dim_date (
     id SERIAL PRIMARY KEY,
     day INTEGER NOT NULL,
     month INTEGER NOT NULL,
-    year INTEGER NOT NULL
-);
-
--- Tabela de Dimensão: Categorias
-CREATE TABLE IF NOT EXISTS dim_categories (
-    id SERIAL PRIMARY KEY,
-    category_name TEXT NOT NULL UNIQUE
+    year INTEGER NOT NULL,
+    UNIQUE (day, month, year)
 );
 
 -- Tabela de Dimensão: Patentes
 CREATE TABLE IF NOT EXISTS dim_patents (
     id SERIAL PRIMARY KEY,
-    invention_title TEXT NOT NULL,
+    invention_title TEXT NOT NULL UNIQUE,
     abstract_text TEXT NOT NULL
 );
 
 -- Tabela de Fato: Palavras em Patentes
 CREATE TABLE IF NOT EXISTS fact_patents (
-    category_id INTEGER NOT NULL,
     patent_id INTEGER NOT NULL,
     word_id INTEGER NOT NULL,
     word_count INTEGER NOT NULL,
