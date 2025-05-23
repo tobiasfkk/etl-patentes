@@ -1,5 +1,6 @@
 from src.utils.db_connection import get_db_connection
 from collections import Counter
+from datetime import datetime
 
 def load_data(transformed_data):
     try:
@@ -9,6 +10,20 @@ def load_data(transformed_data):
 
         for data in transformed_data:
             print(f"\n--- Inserting data: {data['title']} ---")
+
+            # Inserção na Staging Area
+            cursor.execute("INSERT INTO staging_patents (doc_number, invention_title, country, application_date, author_name, abstract_text, abstract_words, description_text) VALUES (%s, %s, %s, %s, %s, %s, %s, %s);",
+                           (
+                               data['doc_number'],
+                               data['title'],
+                               data['country'],
+                               f"{data['date']['year']}-{data['date']['month']:02d}-{data['date']['day']:02d}" if
+                               data['date']['year'] else None,
+                               data['author_name'],
+                               data['abstract'],
+                               data['abstract_words'],
+                               data['description']
+                           ))
 
             # Autor
             cursor.execute("SELECT id FROM dim_authors WHERE author_name = %s;", (data['author_name'],))

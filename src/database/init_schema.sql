@@ -48,3 +48,16 @@ CREATE TABLE IF NOT EXISTS fact_patents (
     FOREIGN KEY (author_id) REFERENCES dim_authors (id),
     FOREIGN KEY (date_id) REFERENCES dim_date (id)
 );
+
+CREATE TABLE IF NOT EXISTS staging_patents (
+    id SERIAL PRIMARY KEY,
+    doc_number TEXT NOT NULL,
+    invention_title TEXT NOT NULL,
+    country TEXT NOT NULL,
+    application_date DATE,
+    author_name TEXT NOT NULL,
+    abstract_text TEXT,
+    abstract_words TEXT[],  -- Array de palavras
+    description_text TEXT,
+    loaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
