@@ -8,6 +8,7 @@ def get_db_connection():
     while retries > 0:
         try:
             print("Attempting to connect to the database...")
+            # localmente
             return psycopg2.connect(
                 dbname=os.getenv("POSTGRES_DB", "patents_db"),
                 user=os.getenv("POSTGRES_USER", "postgres"),
