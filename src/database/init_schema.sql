@@ -29,6 +29,7 @@ CREATE TABLE IF NOT EXISTS dim_date (
 CREATE TABLE IF NOT EXISTS dim_patents (
     id SERIAL PRIMARY KEY,
     invention_title TEXT NOT NULL UNIQUE,
+    doc_number INT NOT NULL UNIQUE,
     abstract_text TEXT NOT NULL,
     description_text TEXT
 );

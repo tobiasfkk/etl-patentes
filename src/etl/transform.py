@@ -1,4 +1,3 @@
-# transform.py
 from datetime import datetime
 import re
 
@@ -8,9 +7,10 @@ def transform_data(patent):
         author_name = f"{patent['first_name']} {patent['last_name']}".strip()
 
         # Transformar data de publicação
-        publication_date = patent['publication_date']
-        if publication_date:
-            date_obj = datetime.strptime(publication_date, "%Y%m%d")
+        application_date = patent['application_date']
+
+        if application_date:
+            date_obj = datetime.strptime(application_date, "%Y%m%d")
             day, month, year = date_obj.day, date_obj.month, date_obj.year
         else:
             day, month, year = None, None, None
@@ -21,6 +21,7 @@ def transform_data(patent):
 
         # Retornar dados transformados
         return {
+            "doc_number": patent['doc_number'],
             "title": patent['title'],
             "country": patent['country'],
             "author_name": author_name,

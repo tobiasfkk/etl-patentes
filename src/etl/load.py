@@ -51,36 +51,12 @@ def load_data(transformed_data):
                 patent_id = res['id']
             else:
                 cursor.execute(
-                    "INSERT INTO dim_patents (invention_title, abstract_text, description_text) VALUES (%s, %s, %s);",
-                    (data['title'], data['abstract'], data['description'])
+                    "INSERT INTO dim_patents (invention_title, doc_number, abstract_text, description_text) VALUES (%s, %s, %s, %s);",
+                    (data['title'], data['doc_number'], data['abstract'], data['description'])
                 )
                 cursor.execute("SELECT id FROM dim_patents WHERE invention_title = %s;", (data['title'],))
                 patent_id = cursor.fetchone()['id']
             print(f"Patent ID: {patent_id}")
-            # print(f"Description: {data['description']}")
-
-            # # Palavras
-            # word_ids = []
-            # for word in data['abstract_words']:
-            #     cursor.execute("SELECT id FROM dim_words WHERE word = %s;", (word,))
-            #     res = cursor.fetchone()
-            #     if res:
-            #         word_id = res['id']
-            #     else:
-            #         cursor.execute("INSERT INTO dim_words (word) VALUES (%s);", (word,))
-            #         cursor.execute("SELECT id FROM dim_words WHERE word = %s;", (word,))
-            #         word_id = cursor.fetchone()['id']
-            #     word_ids.append(word_id)
-            # print(f"Word IDs count: {len(word_ids)}")
-            #
-            # # Fato
-            # for word_id in word_ids:
-            #     cursor.execute("""
-            #         INSERT INTO fact_patents (
-            #             patent_id, word_id, word_count, date_id, country_id, author_id
-            #         ) VALUES (%s, %s, %s, %s, %s, %s)
-            #         ON CONFLICT DO NOTHING;
-            #     """, (patent_id, word_id, count, date_id, country_id, author_id))
 
             # Contar quantas vezes cada palavra aparece no abstract
             word_counts = Counter(data['abstract_words'])

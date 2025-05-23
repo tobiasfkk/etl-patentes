@@ -8,6 +8,7 @@ __pycache__/
 
 # Ignorar arquivos de dados
 data/dados.xml
+data/dados2.xml
 data/dados_corrigido.xml
 
 # Ignorar configurações de IDE
