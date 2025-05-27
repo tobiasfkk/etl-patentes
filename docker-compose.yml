@@ -27,5 +27,21 @@ services:
       - .:/app
     command: ["python", "src/app.py"]
 
+  api:
+    build:
+      context: .
+    container_name: api_patents
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: patents_db
+    command: [ "uvicorn", "src.api.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload" ]
+
 volumes:
   postgres_data:
