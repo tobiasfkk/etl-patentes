@@ -1,5 +1,4 @@
 import xml.etree.ElementTree as ET
-import psycopg2
 import os
 
 def extract_data_from_xml(file_path):
@@ -23,20 +22,14 @@ def extract_data_from_xml(file_path):
             first_name = inventor.findtext("first-name", default="Unknown")
             last_name = inventor.findtext("last-name", default="Unknown")
 
-            # Extrair resumo
             abstract_elem = patent.find(".//abstract")
-            abstract = " ".join(
-                (p.text or "").strip() for p in abstract_elem.findall(".//p")
-            ) if abstract_elem is not None else ""
+            abstract = " ".join((p.text or "").strip() for p in abstract_elem.findall(".//p")) if abstract_elem is not None else ""
             unique_words = " ".join(set(abstract.split()))
 
-            # Extrair descrição
             description_elem = patent.find(".//description")
-            description = " ".join(
-                (p.text or "").strip() for p in description_elem.findall(".//p")
-            ) if description_elem is not None else ""
+            description = " ".join((p.text or "").strip() for p in description_elem.findall(".//p")) if description_elem is not None else ""
 
-            print(f"Extracted data: Title: {title}, Country: {country}, Doc Number: {doc_number}, Application Date: {application_date}, Inventor: {first_name} {last_name}, Abstract: {abstract}, Description: {description}")
+            print(f"Extracted data: Title: {title}, Country: {country}, Doc Number: {doc_number}, Application Date: {application_date}, Inventor: {first_name} {last_name}")
 
             patents.append({
                 "title": title,
