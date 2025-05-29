@@ -1,5 +1,11 @@
 from datetime import datetime
 import re
+import nltk
+from nltk.corpus import stopwords
+
+# Baixar stopwords se necessário
+nltk.download('stopwords')
+stop_words = set(stopwords.words('english'))
 
 def transform_data(patent):
     try:
@@ -17,7 +23,10 @@ def transform_data(patent):
 
         # Dividir resumo em palavras únicas
         # words = set(patent['abstract'].split())
-        words = re.findall(r'\b\w+\b', patent['abstract'].lower())
+        raw_words = re.findall(r'\b\w+\b', patent['abstract'].lower())
+
+        # Remover stopwords em inglês
+        filtered_words = [word for word in raw_words if word not in stop_words]
 
         # Retornar dados transformados
         return {
@@ -27,7 +36,7 @@ def transform_data(patent):
             "author_name": author_name,
             "date": {"day": day, "month": month, "year": year},
             "abstract": patent['abstract'],
-            "abstract_words": words,
+            "abstract_words": filtered_words,
             "description": patent['description']
         }
     except Exception as e:

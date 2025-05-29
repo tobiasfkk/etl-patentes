@@ -5,6 +5,9 @@ from etl.extract import extract_data_from_xml
 from etl.transform import transform_data
 from etl.load import load_data
 from src.utils.db_connection import get_db_connection
+import nltk
+nltk.download('stopwords')
+
 
 def main():
     try:
