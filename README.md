@@ -20,6 +20,9 @@ Este projeto realiza a extração, transformação e carga (ETL) de dados de pat
 
 - Docker e Docker Compose instalados.
 
+### 2. Baixar arquivo XML de Patentes da USPTO
+
+Baixe o arquivo XML de patentes do site da USPTO ([https://data.uspto.gov/bulkdata/datasets/appxml](https://data.uspto.gov/bulkdata/datasets/appxml)) e coloque-o na pasta `data/` do projeto. O arquivo deve ser nomeado `dados.xml`.
 ### 2. Rodar o pipeline ETL
 
 No terminal, execute:
@@ -31,16 +34,6 @@ Esse comando irá:
 - Subir o PostgreSQL com o schema inicial (`init_schema.sql`);
 - Executar o ETL automaticamente após o banco estar disponível;
 - Carregar os dados extraídos do XML para o banco.
-
-### 3. Verificar os dados carregados
-
-Conecte-se ao banco com:
-
-    docker exec -it postgres_patents psql -U postgres -d patents_db
-
-Exemplo de consulta:
-
-    SELECT * FROM fact_patents;
 
 ## 🧱 Estrutura do Banco de Dados
 
@@ -65,6 +58,7 @@ O banco segue uma modelagem em estrela, com:
     - Nome do inventor;
     - Texto do resumo (**abstract**) e **descrição completa**.
 - O script transforma o resumo em palavras únicas, contabiliza suas ocorrências e as armazena na tabela fato.
+- As Stopwords são removidas do resumo para evitar poluição dos dados.
 - O arquivo `dados.xml` deve estar presente na pasta `data/` antes de rodar o ETL.
 
 ## ❓ Contato
