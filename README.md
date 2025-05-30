@@ -53,15 +53,15 @@ O banco segue uma modelagem em estrela, com:
 - `dim_patents`: Título da invenção, resumo e descrição completa.
 
 ### 🔷 Endpoints da API REST
-- `GET http://localhost:8000/words/top`: Retorna as 30 palavras mais frequentes no resumo das patentes.
-- `GET http://localhost:8000/words/por-ano`: Retorna a frequência de palavras por ano.
-- `GET http://localhost:8000/words/por-pais`: Retorna a frequência de palavras por país.
-- `GET http://localhost:8000/words/por-autor`: Retorna a frequência de palavras por autor.
-- `GET http://localhost:8000/words/ranking-anual`: Retorna o top 5 palavras mais frequentes.
-- `GET http://localhost:8000/words/associadas?termo=<termo>`: Retorna palavras associadas a um termo específico.
-- `GET http://localhost:8000/words/associadas-tempo?termo=<termo>`: Retorna palavras associadas a um termo específico ao longo do tempo.
-- `GET http://localhost:8000/authors/nome`: Retorna as patentens vinculadas a um autor.
-- `GET http://localhost:8000/countries/nome`: Retorna as patentes vinculadas a um país.
+- `GET` `http://localhost:8000/words/top`: Retorna as 30 palavras mais frequentes no resumo das patentes.
+- `GET` `http://localhost:8000/words/por-ano`: Retorna a frequência de palavras por ano.
+- `GET` `http://localhost:8000/words/por-pais`: Retorna a frequência de palavras por país.
+- `GET` `http://localhost:8000/words/por-autor`: Retorna a frequência de palavras por autor.
+- `GET` `http://localhost:8000/words/ranking-anual`: Retorna o top 5 palavras mais frequentes.
+- `GET` `http://localhost:8000/words/associadas?termo=<termo>`: Retorna palavras associadas a um termo específico.
+- `GET` `http://localhost:8000/words/associadas-tempo?termo=<termo>`: Retorna palavras associadas a um termo específico ao longo do tempo.
+- `GET` `http://localhost:8000/authors/nome`: Retorna as patentens vinculadas a um autor.
+- `GET` `http://localhost:8000/countries/nome`: Retorna as patentes vinculadas a um país.
 
 ## 📝 Observações
 
