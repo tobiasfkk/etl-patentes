@@ -12,7 +12,7 @@ def load_data(transformed_data):
             print(f"\n--- Inserting data: {data['title']} ---")
 
             # Inserção na Staging Area
-            cursor.execute("INSERT INTO staging_patents (doc_number, invention_title, country, application_date, author_name, abstract_text, abstract_words, description_text) VALUES (%s, %s, %s, %s, %s, %s, %s, %s);",
+            cursor.execute("INSERT INTO staging_patents (doc_number, invention_title, country, application_date, author_name, abstract_text, abstract_words, description_text, category) VALUES (%s, %s, %s, %s, %s, %s, %s, %s);",
                            (
                                data['doc_number'],
                                data['title'],
@@ -22,7 +22,8 @@ def load_data(transformed_data):
                                data['author_name'],
                                data['abstract'],
                                data['abstract_words'],
-                               data['description']
+                               data['description'],
+                               data['category']
                            ))
 
             # Autor
@@ -46,6 +47,17 @@ def load_data(transformed_data):
                 cursor.execute("SELECT id FROM dim_countries WHERE country_name = %s;", (data['country'],))
                 country_id = cursor.fetchone()['id']
             print(f"Country ID: {country_id}")
+
+            # Categoria
+            cursor.execute("SELECT id FROM dim_categories WHERE category_name = %s;", (data['category'],))
+            res = cursor.fetchone()
+            if res:
+                category_id = res['id']
+            else:
+                cursor.execute("INSERT INTO dim_categories (category_name) VALUES (%s);", (data['category'],))
+                cursor.execute("SELECT id FROM dim_categories WHERE category_name = %s;", (data['category'],))
+                category_id = cursor.fetchone()['id']
+            print(f"Category ID: {category_id}")
 
             # Data
             day, month, year = data['date']['day'], data['date']['month'], data['date']['year']
@@ -93,10 +105,10 @@ def load_data(transformed_data):
             for word, (word_id, count) in word_ids.items():
                 cursor.execute("""
                     INSERT INTO fact_patents (
-                        patent_id, word_id, word_count, date_id, country_id, author_id
-                    ) VALUES (%s, %s, %s, %s, %s, %s)
+                        patent_id, word_id, word_count, date_id, country_id, author_id, category_id
+                    ) VALUES (%s, %s, %s, %s, %s, %s, %s)
                     ON CONFLICT DO NOTHING;
-                """, (patent_id, word_id, count, date_id, country_id, author_id))
+                """, (patent_id, word_id, count, date_id, country_id, author_id, category_id))
 
         connection.commit()
         cursor.close()

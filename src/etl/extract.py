@@ -18,6 +18,12 @@ def extract_data_from_xml(file_path):
             doc_number = application.findtext("doc-number", default="Unknown Doc Number")
             application_date = application.findtext("date", default=None)
 
+            classifications = bibliographic_data.find(".//classifications-ipcr/classification-ipcr")
+            section = classifications.findtext("section", default="Unknown section")
+            class_symbol = classifications.findtext("class", default="Unknown class")
+            subclass = classifications.findtext("subclass", default="Unknown subclass")
+            category = f"{section} {class_symbol} {subclass}"
+
             inventor = bibliographic_data.find(".//us-parties/inventors/inventor/addressbook")
             first_name = inventor.findtext("first-name", default="Unknown")
             last_name = inventor.findtext("last-name", default="Unknown")
@@ -29,7 +35,7 @@ def extract_data_from_xml(file_path):
             description_elem = patent.find(".//description")
             description = " ".join((p.text or "").strip() for p in description_elem.findall(".//p")) if description_elem is not None else ""
 
-            print(f"Extracted data: Title: {title}, Country: {country}, Doc Number: {doc_number}, Application Date: {application_date}, Inventor: {first_name} {last_name}")
+            print(f"Extracted data: Title: {title}, Country: {country}, Doc Number: {doc_number}, Application Date: {application_date}, Inventor: {first_name} {last_name}, Category: {category}")
 
             patents.append({
                 "title": title,
@@ -40,7 +46,8 @@ def extract_data_from_xml(file_path):
                 "last_name": last_name,
                 "abstract": abstract,
                 "unique_words": unique_words,
-                "description": description
+                "description": description,
+                "category": category
             })
 
         return patents

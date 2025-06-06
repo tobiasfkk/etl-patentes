@@ -10,6 +10,12 @@ CREATE TABLE IF NOT EXISTS dim_countries (
     country_name TEXT NOT NULL UNIQUE
 );
 
+-- Tabela de Dimensão: Categorias
+CREATE TABLE IF NOT EXISTS dim_categories (
+    id SERIAL PRIMARY KEY,
+    category_name TEXT NOT NULL UNIQUE
+);
+
 -- Tabela de Dimensão: Palavras
 CREATE TABLE IF NOT EXISTS dim_words (
     id SERIAL PRIMARY KEY,
@@ -42,11 +48,13 @@ CREATE TABLE IF NOT EXISTS fact_patents (
     date_id INTEGER NOT NULL,
     country_id INTEGER NOT NULL,
     author_id INTEGER NOT NULL,
+    category_id INTEGER NOT NULL,
     FOREIGN KEY (patent_id) REFERENCES dim_patents (id),
     FOREIGN KEY (word_id) REFERENCES dim_words (id),
     FOREIGN KEY (country_id) REFERENCES dim_countries (id),
     FOREIGN KEY (author_id) REFERENCES dim_authors (id),
-    FOREIGN KEY (date_id) REFERENCES dim_date (id)
+    FOREIGN KEY (date_id) REFERENCES dim_date (id),
+    FOREIGN KEY (category_id) REFERENCES dim_categories (id),
 );
 
 CREATE TABLE IF NOT EXISTS staging_patents (
@@ -59,5 +67,6 @@ CREATE TABLE IF NOT EXISTS staging_patents (
     abstract_text TEXT,
     abstract_words TEXT[],  -- Array de palavras
     description_text TEXT,
+    category TEXT,
     loaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
