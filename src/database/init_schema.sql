@@ -60,7 +60,7 @@ CREATE TABLE IF NOT EXISTS fact_patents (
     FOREIGN KEY (country_id) REFERENCES dim_countries (id),
     FOREIGN KEY (author_id) REFERENCES dim_authors (id),
     FOREIGN KEY (date_id) REFERENCES dim_date (id),
-    FOREIGN KEY (category_id) REFERENCES dim_categories (id),
+    FOREIGN KEY (category_id) REFERENCES dim_categories (id)
 );
 
 CREATE TABLE IF NOT EXISTS fact_generated_terms (
