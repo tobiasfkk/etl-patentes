@@ -68,5 +68,6 @@ CREATE TABLE IF NOT EXISTS staging_patents (
     abstract_words TEXT[],  -- Array de palavras
     description_text TEXT,
     category TEXT,
+    source_file TEXT NOT NULL,
     loaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

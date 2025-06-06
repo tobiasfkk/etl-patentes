@@ -38,7 +38,8 @@ def transform_data(patent):
             "abstract": patent['abstract'],
             "abstract_words": filtered_words,
             "description": patent['description'],
-            "category": patent['category']
+            "category": patent['category'],
+            "source_file": patent['source_file']
         }
     except Exception as e:
         raise Exception(f"Error transforming data: {e}")

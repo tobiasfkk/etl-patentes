@@ -9,10 +9,26 @@ def load_data(transformed_data):
         print(f"Loading {len(transformed_data)} records into the database...")
 
         for data in transformed_data:
+
+            source_file = data['source_file']
+            doc_number = data['doc_number']
+
+            # Verifica se a patente com esse doc_number já foi inserida a partir desse mesmo arquivo
+            cursor.execute("""
+                           SELECT 1
+                           FROM staging_patents
+                           WHERE doc_number = %s
+                             AND source_file = %s LIMIT 1;
+                           """, (doc_number, source_file))
+
+            if cursor.fetchone():
+                print(f"Patente {doc_number} do arquivo {source_file} já existe na staging. Pulando...")
+                continue  # pula para o próximo item
+
             print(f"\n--- Inserting data: {data['title']} ---")
 
             # Inserção na Staging Area
-            cursor.execute("INSERT INTO staging_patents (doc_number, invention_title, country, application_date, author_name, abstract_text, abstract_words, description_text, category) VALUES (%s, %s, %s, %s, %s, %s, %s, %s);",
+            cursor.execute("INSERT INTO staging_patents (doc_number, invention_title, country, application_date, author_name, abstract_text, abstract_words, description_text, category, source_file) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);",
                            (
                                data['doc_number'],
                                data['title'],
@@ -23,7 +39,8 @@ def load_data(transformed_data):
                                data['abstract'],
                                data['abstract_words'],
                                data['description'],
-                               data['category']
+                               data['category'],
+                               data['source_file']
                            ))
 
             # Autor

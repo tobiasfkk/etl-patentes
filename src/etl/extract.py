@@ -12,6 +12,7 @@ def extract_data_from_xml(file_path):
             if bibliographic_data is None:
                 continue
 
+            file_name = patent.attrib.get("file", "unknown.xml")
             title = bibliographic_data.findtext(".//invention-title", default="Unknown Title")
             application = bibliographic_data.find(".//application-reference/document-id")
             country = application.findtext("country", default="Unknown Country")
@@ -47,7 +48,8 @@ def extract_data_from_xml(file_path):
                 "abstract": abstract,
                 "unique_words": unique_words,
                 "description": description,
-                "category": category
+                "category": category,
+                "source_file": file_name
             })
 
         return patents
