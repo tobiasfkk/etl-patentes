@@ -28,7 +28,7 @@ def load_data(transformed_data):
             print(f"\n--- Inserting data: {data['title']} ---")
 
             # Inserção na Staging Area
-            cursor.execute("INSERT INTO staging_patents (doc_number, invention_title, country, application_date, author_name, abstract_text, abstract_words, description_text, category, source_file) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s);",
+            cursor.execute("INSERT INTO staging_patents (doc_number, invention_title, country, application_date, author_name, abstract_text, abstract_words, description_text, category, source_file) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);",
                            (
                                data['doc_number'],
                                data['title'],
