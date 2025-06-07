@@ -38,7 +38,9 @@ def transform_data(patent):
             "abstract": patent['abstract'],
             "abstract_words": filtered_words,
             "description": patent['description'],
-            "category": patent['category'],
+            "section": patent['section'],
+            "class_symbol": patent['class_symbol'],
+            "subclass": patent['subclass'],
             "source_file": patent['source_file']
         }
     except Exception as e:

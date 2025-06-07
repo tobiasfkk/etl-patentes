@@ -28,7 +28,7 @@ def load_data(transformed_data):
             print(f"\n--- Inserting data: {data['title']} ---")
 
             # Inserção na Staging Area
-            cursor.execute("INSERT INTO staging_patents (doc_number, invention_title, country, application_date, author_name, abstract_text, abstract_words, description_text, category, source_file) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s);",
+            cursor.execute("INSERT INTO staging_patents (doc_number, invention_title, country, application_date, author_name, abstract_text, abstract_words, description_text, section, class_symbol, subclass, source_file) VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s);",
                            (
                                data['doc_number'],
                                data['title'],
@@ -39,7 +39,9 @@ def load_data(transformed_data):
                                data['abstract'],
                                data['abstract_words'],
                                data['description'],
-                               data['category'],
+                               data['section'],
+                               data['class_symbol'],
+                               data['subclass'],
                                data['source_file']
                            ))
 
@@ -66,13 +68,13 @@ def load_data(transformed_data):
             print(f"Country ID: {country_id}")
 
             # Categoria
-            cursor.execute("SELECT id FROM dim_categories WHERE category_name = %s;", (data['category'],))
+            cursor.execute("SELECT id FROM dim_categories WHERE subclass = %s;", (data['subclass'],))
             res = cursor.fetchone()
             if res:
                 category_id = res['id']
             else:
-                cursor.execute("INSERT INTO dim_categories (category_name) VALUES (%s);", (data['category'],))
-                cursor.execute("SELECT id FROM dim_categories WHERE category_name = %s;", (data['category'],))
+                cursor.execute("INSERT INTO dim_categories (subclass) VALUES (%s);", (data['subclass'],))
+                cursor.execute("SELECT id FROM dim_categories WHERE subclass = %s;", (data['subclass'],))
                 category_id = cursor.fetchone()['id']
             print(f"Category ID: {category_id}")
 

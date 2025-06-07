@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS dim_countries (
 -- Tabela de Dimensão: Categorias
 CREATE TABLE IF NOT EXISTS dim_categories (
     id SERIAL PRIMARY KEY,
-    category_name TEXT NOT NULL UNIQUE
+    subclass TEXT NOT NULL UNIQUE
 );
 
 -- Tabela de Dimensão: Palavras
@@ -68,7 +68,9 @@ CREATE TABLE IF NOT EXISTS staging_patents (
     abstract_text TEXT,
     abstract_words TEXT[],  -- Array de palavras
     description_text TEXT,
-    category TEXT,
+    section TEXT,
+    class_symbol TEXT,
+    subclass TEXT,
     source_file TEXT NOT NULL,
     loaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
