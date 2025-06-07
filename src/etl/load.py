@@ -112,7 +112,7 @@ def load_data(transformed_data):
                 if res:
                     word_id = res['id']
                 else:
-                    cursor.execute("INSERT INTO dim_words (word) VALUES (%s);", (word,))
+                    cursor.execute("INSERT INTO dim_words (word,is_generated_term) VALUES (%s, %s);", (word,False))
                     cursor.execute("SELECT id FROM dim_words WHERE word = %s;", (word,))
                     word_id = cursor.fetchone()['id']
                 word_ids[word] = (word_id, count)
