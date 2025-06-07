@@ -1,3 +1,51 @@
+#services:
+#  db:
+#    image: postgres:15
+#    container_name: postgres_patents
+#    environment:
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: postgres
+#      POSTGRES_DB: patents_db
+#    ports:
+#      - "5434:5432"  # Porta 5434 no host mapeada para 5432 no container
+#    volumes:
+#      - postgres_data:/var/lib/postgresql/data
+#
+#  app:
+#    build:
+#      context: .
+#    container_name: etl_patents
+#    depends_on:
+#      - db
+#    environment:
+#      DB_HOST: db
+#      DB_PORT: 5432  # Porta interna do container PostgreSQL
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: postgres
+#      POSTGRES_DB: patents_db
+#    volumes:
+#      - .:/app
+#    command: ["python", "src/app.py"]
+#
+#  api:
+#    build:
+#      context: .
+#    container_name: api_patents
+#    ports:
+#      - "8000:8000"
+#    depends_on:
+#      - db
+#    environment:
+#      DB_HOST: db
+#      DB_PORT: 5432
+#      POSTGRES_USER: postgres
+#      POSTGRES_PASSWORD: postgres
+#      POSTGRES_DB: patents_db
+#    command: [ "uvicorn", "src.api.main:app", "--host", "0.0.0.0", "--port", "8000", "--reload" ]
+#
+#volumes:
+#  postgres_data:
+
 services:
   db:
     image: postgres:15
@@ -7,7 +55,7 @@ services:
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: patents_db
     ports:
-      - "5434:5432"  # Porta 5434 no host mapeada para 5432 no container
+      - "5434:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
 
@@ -17,9 +65,10 @@ services:
     container_name: etl_patents
     depends_on:
       - db
+    env_file: .env  # <-- Adicionado
     environment:
       DB_HOST: db
-      DB_PORT: 5432  # Porta interna do container PostgreSQL
+      DB_PORT: 5432
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: patents_db
@@ -35,6 +84,7 @@ services:
       - "8000:8000"
     depends_on:
       - db
+    env_file: .env  # <-- Adicionado
     environment:
       DB_HOST: db
       DB_PORT: 5432
