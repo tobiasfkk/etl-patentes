@@ -72,5 +72,6 @@ CREATE TABLE IF NOT EXISTS staging_patents (
     class_symbol TEXT,
     subclass TEXT,
     source_file TEXT NOT NULL,
+    generated_terms TEXT[],  -- Array de termos gerados
     loaded_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
