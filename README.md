@@ -1,33 +1,44 @@
-# Projeto de ETL para Dados de Patentes
+# TCC - Arquitetura de Data Warehouse Automatizado para Apoio à Gestão do Conhecimento em Bases de Patentes
 
-Este projeto realiza a extração, transformação e carga (ETL) de dados de patentes a partir de um arquivo XML para um banco de dados PostgreSQL utilizando Docker.
+Este projeto realiza a extração, transformação e carga (ETL) de dados de patentes a partir de um arquivo XML para um banco de dados PostgreSQL, utilizando Docker. Além disso, disponibiliza uma API REST para consulta dos dados processados.
+
+Artigo científico: [ARQUITETURA_DE_DATA_WAREHOUSE_AUTOMATIZADO_PARA_APOIO_À_GESTÃO_DO_CONHECIMENTO_EM_BASES_DE_PATENTES.pdf](ARQUITETURA_DE_DATA_WAREHOUSE_AUTOMATIZADO_PARA_APOIO_%C3%80_GEST%C3%83O_DO_CONHECIMENTO_EM_BASES_DE_PATENTES.pdf)
 
 ## 📁 Estrutura do Projeto
 
-- `data/dados.xml`: Arquivo XML com os dados de patentes.
-- `src/etl/`: Scripts da pipeline ETL:
-    - `extract.py`: Extrai dados como título, resumo, descrição, autor, país e data.
+- **`data/`**: Contém os arquivos XML de entrada e os corrigidos.
+    - `dados.xml`: Arquivo XML original com os dados de patentes.
+- **`src/etl/`**: Scripts da pipeline ETL:
+    - `extract.py`: Extrai dados como título, resumo, descrição, autor, país e data do XML.
     - `transform.py`: Padroniza os dados, extrai palavras únicas e organiza datas.
     - `load.py`: Insere os dados no banco relacional em modelo estrela.
-- `src/database/init_schema.sql`: Script SQL de criação do esquema de banco.
-- `src/utils/db_connection.py`: Conexão ao PostgreSQL via psycopg2.
-- `docker-compose.yml`: Define os serviços (PostgreSQL + contêiner ETL).
-- `Dockerfile`: Configura o ambiente Python para o serviço ETL.
+- **`src/database/init_schema.sql`**: Script SQL para criação do esquema do banco de dados.
+- **`src/api/`**: Implementação da API REST:
+    - `main.py`: Configuração principal da API com FastAPI.
+    - `endpoints/`: Endpoints para consulta de patentes, autores e palavras.
+    - `queries.py`: Consultas SQL utilizadas pela API.
+- **`src/utils/db_connection.py`**: Configuração da conexão com o banco de dados PostgreSQL.
+- **`docker-compose.yml`**: Define os serviços Docker (PostgreSQL, ETL e API).
+- **`Dockerfile`**: Configura o ambiente Python para o serviço ETL.
 
 ## ▶️ Como Executar
 
 ### 1. Pré-requisitos
 
-- Docker e Docker Compose instalados.
+- **Docker** e **Docker Compose** instalados.
 
-### 2. Baixar arquivo XML de Patentes da USPTO
+### 2. Configurar o Ambiente
 
-Baixe o arquivo XML de patentes do site da USPTO ([https://data.uspto.gov/bulkdata/datasets/appxml](https://data.uspto.gov/bulkdata/datasets/appxml)) e coloque-o na pasta `data/` do projeto. O arquivo deve ser nomeado `dados.xml`.
-### 2. Rodar o pipeline ETL
+1. Baixe o arquivo XML de patentes do site da USPTO ([https://data.uspto.gov/bulkdata/datasets/appxml](https://data.uspto.gov/bulkdata/datasets/appxml)).
+2. Coloque o arquivo na pasta `data/` do projeto com o nome `dados.xml`.
+
+### 3. Executar o Projeto
 
 No terminal, execute:
 
-    docker-compose up --build
+```bash
+docker-compose up --build
+```
 
 Esse comando irá:
 
@@ -36,43 +47,54 @@ Esse comando irá:
 - Carregar os dados extraídos do XML para o banco.
 - Iniciar o serviço da API REST para consulta dos dados.
 
-## 🧱 Estrutura do Banco de Dados
+## Acessar a API
+
+Após a execução, a API estará disponível em [http://localhost:8000](http://localhost:8000). A documentação interativa pode ser acessada em [http://localhost:8000/docs](http://localhost:8000/docs).
+
+### 🧱 Estrutura do Banco de Dados
 
 O banco segue uma modelagem em estrela, com:
 
-### 🔷 Tabela de Fato
+#### 🔷 Tabela de Fato
 
-- `fact_patents`: Contabiliza a ocorrência de palavras no resumo por patente, data, país e autor.
+- **`fact_patents`**: Contabiliza a ocorrência de palavras no resumo por patente, data, país e autor.
 
-### 🔶 Tabelas de Dimensão
+#### 🔶 Tabelas de Dimensão
 
-- `dim_authors`: Nome dos autores (inventores).
-- `dim_countries`: País da publicação.
-- `dim_words`: Palavras únicas extraídas do resumo (`abstract`).
-- `dim_date`: Dia, mês e ano da publicação.
-- `dim_patents`: Título da invenção, resumo e descrição completa.
+- **`dim_authors`**: Informações sobre os autores das patentes.
+- **`dim_countries`**: Países associados às patentes.
+- **`dim_categories`**: Classificação das patentes (subclasses).
+- **`dim_words`**: Palavras únicas extraídas dos resumos.
+- **`dim_date`**: Datas associadas às patentes.
+- **`dim_patents`**: Informações gerais das patentes (título, número, resumo, descrição).
 
-### 🔷 Endpoints da API REST
-- `GET` `http://localhost:8000/words/top`: Retorna as 30 palavras mais frequentes no resumo das patentes.
-- `GET` `http://localhost:8000/words/por-ano`: Retorna a frequência de palavras por ano.
-- `GET` `http://localhost:8000/words/por-pais`: Retorna a frequência de palavras por país.
-- `GET` `http://localhost:8000/words/por-autor`: Retorna a frequência de palavras por autor.
-- `GET` `http://localhost:8000/words/ranking-anual`: Retorna o top 5 palavras mais frequentes.
-- `GET` `http://localhost:8000/words/associadas?termo=<termo>`: Retorna palavras associadas a um termo específico.
-- `GET` `http://localhost:8000/words/associadas-tempo?termo=<termo>`: Retorna palavras associadas a um termo específico ao longo do tempo.
-- `GET` `http://localhost:8000/authors/nome`: Retorna as patentens vinculadas a um autor.
-- `GET` `http://localhost:8000/countries/nome`: Retorna as patentes vinculadas a um país.
+#### 🛠️ Tabela de Staging
 
-## 📝 Observações
+- **`staging_patents`**: Área temporária para armazenar os dados extraídos antes de serem carregados no modelo estrela.
 
-- O ETL extrai e armazena:
-    - Título, país, número do documento, tipo, data de publicação;
-    - Nome do inventor;
-    - Texto do resumo (**abstract**) e **descrição completa**.
-- O script transforma o resumo em palavras únicas, contabiliza suas ocorrências e as armazena na tabela fato.
-- As Stopwords são removidas do resumo para evitar poluição dos dados.
-- O arquivo `dados.xml` deve estar presente na pasta `data/` antes de rodar o ETL.
+### 🌐 Endpoints da API
 
-## ❓ Contato
+A API REST permite consultar os dados processados. Alguns dos principais endpoints:
 
-Em caso de dúvidas ou sugestões, sinta-se à vontade para abrir uma *issue* ou entrar em contato.
+- **`GET /patents/`**: Lista as patentes cadastradas.
+- **`GET /authors/`**: Lista os autores cadastrados.
+- **`GET /words/top`**: Retorna as palavras mais frequentes nos resumos.
+- **`GET /words/associadas`**: Retorna palavras associadas a termos específicos.
+
+Para mais detalhes, acesse a documentação da API.
+
+### 📊 Consultas SQL Disponíveis
+
+O projeto inclui consultas SQL para análise dos dados, como:
+
+- Palavras mais frequentes por ano, país ou autor;
+- Palavras associadas a termos específicos;
+- Ranking anual das palavras mais utilizadas.
+
+### 🛠️ Tecnologias Utilizadas
+
+- **Python**: Para a implementação da pipeline ETL e da API.
+- **PostgreSQL**: Banco de dados relacional para armazenamento dos dados.
+- **Supabase**: Plataforma de banco de dados baseada em PostgreSQL.
+- **Docker**: Para containerização dos serviços.
+- **FastAPI**: Framework para criação da API REST.
